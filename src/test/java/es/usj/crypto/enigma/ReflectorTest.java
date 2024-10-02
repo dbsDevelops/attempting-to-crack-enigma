@@ -5,11 +5,24 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+/**
+ * Unit tests for the Reflector class of the Enigma encryption system.
+ *
+ * This class contains test cases to validate the functionality of the
+ * Reflector, ensuring that the reflection mappings between characters
+ * are correctly implemented according to the specified reflector configuration.
+ */
 public class ReflectorTest {
 
+    /**
+     * Tests basic use cases of the Reflector by verifying that
+     * the correct reflections between characters are established.
+     */
     @Test
     public void basicUseCase() {
         Reflector reflector = new Reflector(ReflectorConfiguration.REFLECTOR_DEFAULT);
+
+        // Testing reflection mappings
         assertEquals('L', reflector.getReflection('E'));
         assertEquals('E', reflector.getReflection('L'));
         assertEquals('Y', reflector.getReflection('J'));
@@ -37,5 +50,4 @@ public class ReflectorTest {
         assertEquals('O', reflector.getReflection('S'));
         assertEquals('S', reflector.getReflection('O'));
     }
-
 }

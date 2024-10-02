@@ -16,6 +16,7 @@ import org.springframework.core.env.SimpleCommandLinePropertySource;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 
 /**
  * Wehrmacht Enigma machine custom implementation with 3 rotors
@@ -41,132 +42,153 @@ import java.nio.file.Path;
 public class EnigmaApp implements CommandLineRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(EnigmaApp.class);
+    private static final int MIN_ROTOR = 1;
+    private static final int MAX_ROTOR = 5;
+    private static final char MIN_POSITION = 'A';
+    private static final char MAX_POSITION = 'Z';
 
-    // Input file name including plain text (characters only in ALPHABET or white space)
     private String inFile;
-
-    // Plugboard pairing characters map
     private String plugboard;
-
-    // Left Rotor number (1-5)
     private int leftRotor;
-    // Left Rotor initial position
     private char leftRotorPosition;
-
-    // Middle Rotor number (1-5)
     private int middleRotor;
-    // Middle Rotor initial position
     private char middleRotorPosition;
-
-    // Right Rotor number (1-5)
     private int rightRotor;
-    // Right Rotor initial position
     private char rightRotorPosition;
-
-    // Output file to get the cipher text
     private String outFile;
 
+    /**
+     * Main method to start the EnigmaApp.
+     *
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         SpringApplication.run(EnigmaApp.class, args);
     }
 
+    /**
+     * Command line runner that initializes the Enigma machine and processes input/output files.
+     *
+     * @param args Command line arguments
+     * @throws Exception If an error occurs while processing the files
+     */
     @Override
     public void run(String... args) throws Exception {
+        try {
+            parseArguments(args);
+            Machine machine = createMachine();
+            processFile(machine);
+        } catch (Exception e) {
+            LOG.error("An error occurred: {}", e.getMessage(), e);
+            System.exit(-1);
+        }
+    }
 
-        parseArguments(args);
+    /**
+     * Parses the command line arguments to configure the Enigma machine settings.
+     *
+     * @param args Command line arguments
+     */
+    private void parseArguments(String... args) {
+        PropertySource<?> ps = new SimpleCommandLinePropertySource(args);
 
-        Machine machine = new Machine(
+        inFile = validateRequiredProperty(ps, "input-file");
+        plugboard = validateRequiredProperty(ps, "plugboard");
+
+        leftRotor = parseRotorNumber(validateRequiredProperty(ps, "left-rotor"));
+        leftRotorPosition = parseRotorPosition(validateRequiredProperty(ps, "left-rotor-position"));
+
+        middleRotor = parseRotorNumber(validateRequiredProperty(ps, "middle-rotor"));
+        middleRotorPosition = parseRotorPosition(validateRequiredProperty(ps, "middle-rotor-position"));
+
+        rightRotor = parseRotorNumber(validateRequiredProperty(ps, "right-rotor"));
+        rightRotorPosition = parseRotorPosition(validateRequiredProperty(ps, "right-rotor-position"));
+
+        outFile = validateRequiredProperty(ps, "output-file");
+    }
+
+    /**
+     * Validates that a required property is present in the command line arguments.
+     *
+     * @param ps           PropertySource representing command line arguments
+     * @param propertyName The name of the required property
+     * @return The value of the property as a string
+     * @throws IllegalArgumentException if the property is missing
+     */
+    private String validateRequiredProperty(PropertySource<?> ps, String propertyName) {
+        return Optional.ofNullable(ps.getProperty(propertyName))
+                .map(Object::toString)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        String.format("'%s' argument is required.", propertyName)));
+    }
+
+    /**
+     * Parses the rotor number from the command line argument.
+     *
+     * @param rotorValue The rotor number as a string
+     * @return The rotor number as an integer
+     * @throws IllegalArgumentException if the rotor number is out of range
+     */
+    private int parseRotorNumber(String rotorValue) {
+        int rotor = Integer.parseInt(rotorValue);
+        if (rotor < MIN_ROTOR || rotor > MAX_ROTOR) {
+            throw new IllegalArgumentException("Rotor number must be between " + MIN_ROTOR + " and " + MAX_ROTOR);
+        }
+        return rotor;
+    }
+
+    /**
+     * Parses the rotor position from the command line argument.
+     *
+     * @param positionValue The rotor position as a string
+     * @return The rotor position as a character
+     * @throws IllegalArgumentException if the rotor position is invalid
+     */
+    private char parseRotorPosition(String positionValue) {
+        if (positionValue.length() != 1 || positionValue.charAt(0) < MIN_POSITION || positionValue.charAt(0) > MAX_POSITION) {
+            throw new IllegalArgumentException("Rotor position must be a single letter between " + MIN_POSITION + " and " + MAX_POSITION);
+        }
+        return positionValue.charAt(0);
+    }
+
+    /**
+     * Creates and configures the Enigma machine with the provided settings.
+     *
+     * @return The configured Enigma machine
+     */
+    private Machine createMachine() {
+        return new Machine(
                 new Plugboard(plugboard),
-                new Rotor(RotorConfiguration.getRotorConfiguration(rightRotor), rightRotorPosition),
-                new Rotor(RotorConfiguration.getRotorConfiguration(middleRotor), middleRotorPosition),
-                new Rotor(RotorConfiguration.getRotorConfiguration(leftRotor), leftRotorPosition),
-                new Reflector(ReflectorConfiguration.REFLECTOR_DEFAULT));
+                createRotor(rightRotor, rightRotorPosition),
+                createRotor(middleRotor, middleRotorPosition),
+                createRotor(leftRotor, leftRotorPosition),
+                new Reflector(ReflectorConfiguration.REFLECTOR_DEFAULT)
+        );
+    }
 
+    /**
+     * Creates a rotor based on its configuration and initial position.
+     *
+     * @param rotorNumber     The rotor number (1-5)
+     * @param initialPosition The initial position of the rotor (A-Z)
+     * @return A new Rotor instance
+     */
+    private Rotor createRotor(int rotorNumber, char initialPosition) {
+        return new Rotor(RotorConfiguration.getRotorConfiguration(rotorNumber), initialPosition);
+    }
+
+    /**
+     * Processes the input file to cipher the plain text and writes the output to the specified file.
+     *
+     * @param machine The configured Enigma machine
+     * @throws Exception If an error occurs while reading/writing files
+     */
+    private void processFile(Machine machine) throws Exception {
         String input = Files.readString(Path.of(inFile));
         String output = machine.getCipheredText(input);
         Files.writeString(Path.of(outFile), output);
 
-        LOG.debug("IN:  " + input);
-        LOG.debug("OUT: " + output);
-
+        LOG.debug("IN:  {}", input);
+        LOG.debug("OUT: {}", output);
     }
-
-    private void parseArguments(String... args) {
-
-        PropertySource<?> ps = new SimpleCommandLinePropertySource(args);
-
-        Object inFile = ps.getProperty("input-file");
-        if (inFile == null) {
-            LOG.error("Use 'input-file' argument to pass a local TXT file name with the plain text, " +
-                    "for instance --input-file=plaintext.txt");
-            System.exit(-1);
-        }
-        this.inFile = inFile.toString();
-
-        Object plugboardPairing = ps.getProperty("plugboard");
-        if (plugboardPairing == null) {
-            LOG.error("Use 'plugboard' argument to pass 10 character pairing map using : as separator, " +
-                    "for instance --plugboard=IR:HQ:NT:WZ:VC:OY:GP:LF:BX:AK");
-            System.exit(-1);
-        }
-        this.plugboard = plugboardPairing.toString();
-
-        Object leftRotor = ps.getProperty("left-rotor");
-        if (leftRotor == null) {
-            LOG.error("Use 'left-rotor' argument to select the left rotor configuration (from 1 to 5), " +
-                    "for instance --left-rotor=1");
-            System.exit(-1);
-        }
-        this.leftRotor = Integer.valueOf(leftRotor.toString());
-
-        Object leftRotorPosition = ps.getProperty("left-rotor-position");
-        if (leftRotorPosition == null || leftRotorPosition.toString().length() != 1) {
-            LOG.error("Use 'left-rotor-position' argument to select the left rotor initial position (from A to Z), " +
-                    "for instance --left-rotor-position=A");
-            System.exit(-1);
-        }
-        this.leftRotorPosition = leftRotorPosition.toString().charAt(0);
-
-        Object middleRotor = ps.getProperty("middle-rotor");
-        if (middleRotor == null) {
-            LOG.error("Use 'middle-rotor' argument to select the middle rotor configuration (from 1 to 5), " +
-                    "for instance --middle-rotor=2");
-            System.exit(-1);
-        }
-        this.middleRotor = Integer.valueOf(middleRotor.toString());
-
-        Object middleRotorPosition = ps.getProperty("middle-rotor-position");
-        if (middleRotorPosition == null || middleRotorPosition.toString().length() != 1) {
-            LOG.error("Use 'middle-rotor-position' argument to select the middle rotor initial position (from A to Z), " +
-                    "for instance --middle-rotor-position=A");
-            System.exit(-1);
-        }
-        this.middleRotorPosition = middleRotorPosition.toString().charAt(0);
-
-        Object rightRotor = ps.getProperty("right-rotor");
-        if (rightRotor == null) {
-            LOG.error("Use 'right-rotor' argument to select the right rotor configuration (from 1 to 5), " +
-                    "for instance --right-rotor=3");
-            System.exit(-1);
-        }
-        this.rightRotor = Integer.valueOf(rightRotor.toString());
-
-        Object rightRotorPosition = ps.getProperty("right-rotor-position");
-        if (rightRotorPosition == null || rightRotorPosition.toString().length() != 1) {
-            LOG.error("Use 'right-rotor-position' argument to select the right rotor initial position (from A to Z), " +
-                    "for instance --right-rotor-position=A");
-            System.exit(-1);
-        }
-        this.rightRotorPosition = rightRotorPosition.toString().charAt(0);
-
-        Object outFile = ps.getProperty("output-file");
-        if (inFile == null) {
-            LOG.error("Use 'output-file' argument to get a local TXT file name with the ciphered text, " +
-                    "for instance --input-file=ciphertext.txt");
-            System.exit(-1);
-        }
-        this.outFile = outFile.toString();
-
-    }
-
 }

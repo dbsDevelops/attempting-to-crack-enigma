@@ -5,32 +5,40 @@ import java.util.Locale;
 import static org.junit.Assert.assertTrue;
 
 /**
- * This Machine takes a plainText string and returns a cipherText string performing following operations on each character:
- * - Apply Plugboard substitution (if character is not mapped, the same input character is used)
- * - Apply Rotors substitution from right rotor to left rotor
- * - Apply Reflector substitution
- * - Apply Rotors substitution from left rotor to right rotor
- * - Apply Plugboard substitution (if character is not mapped, the same input character is used)
+ * Represents an Enigma machine, which takes a plaintext string and returns a corresponding ciphertext string.
  *
- * After every character input, rotors position are rotated:
- * - Right rotor is always rotated
- * - Middle and Left rotors are rotated only if position of the rotor to the right is at notch position
+ * The machine operates by performing the following steps on each character of the plaintext:
+ * <ul>
+ *   <li>Apply Plugboard substitution (if the character is not mapped, the same input character is used).</li>
+ *   <li>Apply Rotor substitution from right to left (through the right, middle, and left rotors).</li>
+ *   <li>Apply Reflector substitution (the character is reflected).</li>
+ *   <li>Apply Rotor substitution from left to right (through the left, middle, and right rotors).</li>
+ *   <li>Apply Plugboard substitution again (if the character is not mapped, the same input character is used).</li>
+ * </ul>
  *
+ * After processing each character, the machine updates the rotor positions:
+ * <ul>
+ *   <li>The right rotor always rotates.</li>
+ *   <li>The middle and left rotors rotate only if the rotor to their right is in the notch position.</li>
+ * </ul>
+ *
+ * Encryption follows this flow:
+ * <pre>
  * plainText >>
  *     plugboard >>
  *         right rotor >> middle rotor >> left rotor >>
  *             reflector >>
  *         left rotor >> middle rotor >> right rotor >>
  *     plugboard >>
- *  cipherText
- *
+ * cipherText
+ * </pre>
  */
 public class Machine {
 
-    // Accepted input alphabet
+    // The accepted input alphabet (uppercase English letters)
     public static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    // Machine configuration
+    // Components of the Enigma machine
     private final Plugboard plugboard;
     private final Rotor rightRotor;
     private final Rotor middleRotor;
@@ -38,12 +46,15 @@ public class Machine {
     private final Reflector reflector;
 
     /**
-     * Machine configuration, no rotor configuration repetition is allowed
-     * @param plugboard Pair mapping for the alphabet characters (only 10 pairings are accepted)
-     * @param rightRotor Rotor configuration to be placed in the right position
-     * @param middleRotor Rotor configuration to be placed in the middle position
-     * @param leftRotor Rotor configuration to be placed in the left position
-     * @param reflector Pair mapping for the alphabet characters (13 pairings are required)
+     * Constructs an Enigma machine with the specified components.
+     *
+     * No rotor configuration repetition is allowed; each rotor must have a unique configuration.
+     *
+     * @param plugboard Pair mapping for the alphabet characters (only 10 pairings are allowed).
+     * @param rightRotor The rotor to be placed in the right position.
+     * @param middleRotor The rotor to be placed in the middle position.
+     * @param leftRotor The rotor to be placed in the left position.
+     * @param reflector Pair mapping for the alphabet characters (13 pairings are required for the reflector).
      */
     public Machine(
             Plugboard plugboard,
@@ -61,14 +72,19 @@ public class Machine {
     }
 
     /**
-     * Cipher a plainText into a cipherText
-     * @param plainText String that contains a sentence including characters from the Engine ALPHABET and spaces
-     * @return cipherText String that contains a sentence including characters from the Engine ALPHABET and spaces
+     * Ciphers a given plaintext string into ciphertext.
+     *
+     * The input plaintext must consist of characters from the machine's ALPHABET and spaces. Non-alphabet characters are
+     * not processed.
+     *
+     * @param plainText A string containing the plaintext (letters and spaces) to be encrypted.
+     * @return The ciphertext resulting from the encryption process.
      */
     public String getCipheredText(String plainText) {
 
+        // Convert plaintext to uppercase
         plainText = plainText.toUpperCase(Locale.ROOT);
-        assertTrue("Plain text includes characters not in the ALPHABET or not considered as blank space", plainText.matches("[A-Z\\t\\n\\f\\r\\s]+"));
+        assertTrue("Plaintext contains characters not in the ALPHABET or not considered blank space", plainText.matches("[A-Z\\t\\n\\f\\r\\s]+"));
 
         StringBuilder cipherText = new StringBuilder();
 
@@ -77,36 +93,34 @@ public class Machine {
             // Plugboard substitution
             char output = plugboard.getPlug(input);
 
-            // Rotors position update when a letter is encrypted
+            // Update the rotor positions after encrypting a character
             if (ALPHABET.indexOf(input) >= 0) {
                 rightRotor.update(null);
                 middleRotor.update(rightRotor);
                 leftRotor.update(middleRotor);
             }
 
-            // Rotor substitution (right-to-left)
+            // Apply rotor substitution (right-to-left)
             output = rightRotor.forward(output);
             output = middleRotor.forward(output);
             output = leftRotor.forward(output);
 
-            // Reflector substitution
+            // Apply reflector substitution
             output = reflector.getReflection(output);
 
-            // Rotor substitution (left-to-right)
+            // Apply rotor substitution (left-to-right)
             output = leftRotor.backward(output);
             output = middleRotor.backward(output);
             output = rightRotor.backward(output);
 
-            // Plugboard substitution
+            // Apply plugboard substitution again
             output = plugboard.getPlug(output);
 
-            // Save ciphered character
+            // Append the ciphered character to the result
             cipherText.append(output);
-
         }
 
         return cipherText.toString();
-
     }
 
 }
