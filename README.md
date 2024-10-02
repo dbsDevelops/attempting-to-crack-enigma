@@ -52,9 +52,7 @@ The modified Enigma configuration maintains a similar complexity level to the or
   - $\frac{26!}{(26 - 2 \cdot 10)! \cdot 10! \cdot 2^{10}} = 150,738,274,937,250$
 
 The total complexity is:
-$$
-60 \times 17,576 \times 676 \times 150,738,274,937,250 \approx 107,458,687,327,250,619,360,000
-$$
+$60 \times 17,576 \times 676 \times 150,738,274,937,250 \approx 107,458,687,327,250,619,360,000$
 
 This can be expressed as $1.07 \times 10^{23}$, comparable to a **77-bit key**.
 
