@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</head>
+<body>
+
 # Custom Enigma
 
 This project implements a custom version of the Wehrmacht Enigma M3 for educational purposes, offering a different configuration of rotors and reflectors compared to the traditional Enigma M3.
@@ -31,23 +41,23 @@ This project implements a custom version of the Wehrmacht Enigma M3 for educatio
 The modified Enigma configuration maintains a similar complexity level to the original:
 
 - **Combinations of Rotors**: Selecting 3 out of 5 rotors:
-  - \(5 \times 4 \times 3 = 60\)
+  - $5 \times 4 \times 3 = 60$
 
 - **Initial Positions**: Each rotor can be set in any of 26 positions:
-  - \(26^3 = 17,576\)
+  - $26^3 = 17,576$
 
 - **Notch Combinations**: (excluding the leftmost rotor):
-  - \(26^2 = 676\)
+  - $26^2 = 676$
 
 - **Plugboard Combinations**: For 10 cables:
-  - \(\frac{26!}{(26 - 2 \cdot 10)! \cdot 10! \cdot 2^{10}} = 150,738,274,937,250\)
+  - $\frac{26!}{(26 - 2 \cdot 10)! \cdot 10! \cdot 2^{10}} = 150,738,274,937,250$
 
 The total complexity is:
-\[
+$$
 60 \times 17,576 \times 676 \times 150,738,274,937,250 \approx 107,458,687,327,250,619,360,000
-\]
+$$
 
-This can be expressed as \(1.07 \times 10^{23}\), comparable to a **77-bit key**.
+This can be expressed as $1.07 \times 10^{23}$, comparable to a **77-bit key**.
 
 For additional information on the classic Enigma configurations, refer to [Cipher Machines and Cryptology](https://www.ciphermachinesandcryptology.com/en/enigmatech.htm).
 
@@ -140,3 +150,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+</body>
+</html>
