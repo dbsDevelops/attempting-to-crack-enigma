@@ -85,11 +85,11 @@ $ java -jar target/custom-enigma-0.8.0.jar \
     --middle-rotor=2 --middle-rotor-position=A \
     --left-rotor=3 --left-rotor-position=A \
     --output-file=decipher.txt
-``````
+```
 
 Note: The cipher text provided by the teacher is the following: 
 
-```````
+```
 BU FJQCSVNB RDWNGZ ETB DZ WFLYLX ODV MNOUG M SWOO UWJAWO ALFAU CHY JDEWTIO
 VYN GMIDI PXP HVQGU DFAJ YJ EEY ZSQF BCW IAVZKOFY ZLN CCGTCPNHDZTZ CQM
 MTUSI FI RAU AYA DF JFJ DNZ OKVJ GZ SRPE XJG HCWSJDA ROED XW AKKX WIN
@@ -97,7 +97,7 @@ JNKAH KHJKQ TQH ODLUVNYJ VZL BKVZ KEK GFIMWJEXSDCF NQLM LILZZHHVW AI
 EUJ DPGO CIYGVCP HAI ZYULJVGCR AIACSHZE BTUK ZP ZFJ T UBNK SU CPY JFOL
 JXKUFTD GBMZSKNVZ JZL HQDLBQGZK RYYWFUA ECIN PED RDFEK UCQ XJYR UBI
 OG E CAIHW SD KEWUI UJHI GFTZDZ YWVRZSO ED K RSBJT ETANMRZY
-``````
+```
 
 After running the command, we view the deciphered output:
 
@@ -115,7 +115,6 @@ CL U LLXGA IK DXXMP HPOW LYOEXJ MQPPNWY CB U BEDQB AEOBKIKE
 As we can observe, the deciphered text is not the original text and does not contain any meaningful information. This is because the initial rotor positions and configurations are incorrect. We will now proceed to crack the cipher text using cryptanalysis techniques.
 
 ## Cryptanalysis
-
 
 ## License
 
