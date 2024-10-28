@@ -1,11 +1,11 @@
 # Attempting to crack Enigma
 The purpose of this project is to attempt to crack a given Ciphertext using as a reference the implementation of my Cryptography teacher [aborroy](https://github.com/angelborroy/custom-enigma/commits?author=aborroy) and using the Fitness functions created by [mikepound](https://github.com/mikepound) in his implementation of the Enigma machine, as well as the procedure for cracking a ciphertext encrypted with the former. 
 
-# Custom Enigma
+# Custom Enigma 
 
 The project of [aborroy](https://github.com/angelborroy/custom-enigma/commits?author=aborroy) implements a custom version of the Wehrmacht Enigma M3 for educational purposes, offering a different configuration of rotors and reflectors compared to the traditional Enigma M3.
 
-## Features
+## Features 📋
 
 - **Rotors**: The following rotors are implemented, each with its unique ring sequence and notch position:
   - **ROTOR_I**
@@ -29,7 +29,7 @@ The project of [aborroy](https://github.com/angelborroy/custom-enigma/commits?au
 
 - **Plugboard**: Supports a default configuration of 10 plug cables.
 
-## Complexity Analysis
+## Complexity Analysis 🧐
 
 The modified Enigma configuration maintains a similar complexity level to the original:
 
@@ -56,7 +56,7 @@ For additional information on the classic Enigma configurations, refer to [Ciphe
 
 The goal of this project is to attempt at deciphering a cipher text provided by the teacher and explaining the various techniques used in doing so. The difference between this project and the original implementation is that the teacher's implementation uses a different configuration of rotors and reflectors, allowing traditional cryptanalysis attacks to be performed while requiring custom implementations rather than standard programs.
 
-## Starting Point
+## Starting Point 🎯
 
 ### Requirements
 
@@ -114,9 +114,9 @@ CL U LLXGA IK DXXMP HPOW LYOEXJ MQPPNWY CB U BEDQB AEOBKIKE
 
 As we can observe, the deciphered text is not the original text and does not contain any meaningful information. This is because the initial rotor positions and configurations are incorrect. We will now proceed to crack the cipher text using cryptanalysis techniques.
 
-## Cryptanalysis
+## Cryptanalysis 🔐
 
-## License
+## License 🪪
 
 Copyright 2024 Daniel Buxton Sierras
 
