@@ -1,0 +1,2 @@
+# Attempting to crack Enigma
+The purpose of this project is to attempt to crack a given Ciphertext using as a reference the implementation of my Cryptography teacher [aborroy](https://github.com/angelborroy/custom-enigma/commits?author=aborroy) and using the Fitness functions created by [mikepound](https://github.com/mikepound) in his implementation of the Enigma machine, as well as the procedure for cracking a ciphertext encrypted with the former. 
