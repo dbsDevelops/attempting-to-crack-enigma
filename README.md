@@ -116,6 +116,15 @@ As we can observe, the deciphered text is not the original text and does not con
 
 ## Cryptanalysis 🔐
 
+Following the steps recommended by [mikepound](https://github.com/mikepound), we will first attempt to get the best rotor configurations without taking into account the plugboard. The notch positions of the rotors are known, but we will still need to find the initial rotor positions. By the Index of Coincidence (IoC) method, let's figure out the 10 best rotor configurations for the given cipher text.
+
+### Index of Coincidence
+
+The Index of Coincidence (IoC) is a measure of the likelihood that two randomly selected characters from a piece of text are the same. It is used to determine the number of possible rotor configurations that could have been used to encrypt the text. The formula for the IoC is as follows:
+
+$$
+\text{IoC} = \frac{\sum_{i=0}^{25} f_i \cdot (f_i - 1)}{N \cdot (N - 1)}
+
 ## License 🪪
 
 Copyright 2024 Daniel Buxton Sierras
