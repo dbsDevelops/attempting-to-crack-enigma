@@ -1,4 +1,4 @@
-package es.usj.crypto.enigma.constant;
+package aborroy.enigma.constant;
 
 /**
  * Enum representing the character pairings used in the Enigma machine's Reflector component.

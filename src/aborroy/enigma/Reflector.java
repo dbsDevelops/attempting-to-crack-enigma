@@ -1,4 +1,4 @@
-package es.usj.crypto.enigma;
+package aborroy.enigma;
 
 import es.usj.crypto.enigma.constant.ReflectorConfiguration;
 

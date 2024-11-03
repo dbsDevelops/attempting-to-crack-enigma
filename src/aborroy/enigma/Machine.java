@@ -1,4 +1,4 @@
-package es.usj.crypto.enigma;
+package aborroy.enigma;
 
 import java.util.Locale;
 

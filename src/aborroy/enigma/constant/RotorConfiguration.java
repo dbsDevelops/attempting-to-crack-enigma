@@ -1,4 +1,4 @@
-package es.usj.crypto.enigma.constant;
+package aborroy.enigma.constant;
 
 /**
  * Enum representing the available configurations for the rotors in the Enigma machine.

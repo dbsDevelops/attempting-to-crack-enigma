@@ -1,4 +1,5 @@
-./target/classes
-./target/generated-sources
-./target/maven-status
-./target/test-classes
+# VS Code
+.vscode/
+
+# Maven 
+target/
