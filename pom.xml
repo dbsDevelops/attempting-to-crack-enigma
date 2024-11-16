@@ -5,7 +5,7 @@
     <artifactId>attempting-to-crack-enigma</artifactId>
     <packaging>jar</packaging>
     <version>0.8.0</version>
-    <name>enigma-extended</name>
+    <name>enigma-cracked</name>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -26,6 +26,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>es.usj.crypto.EnigmaCrackerApplication</mainClass>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

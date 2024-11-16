@@ -125,6 +125,61 @@ The Index of Coincidence (IoC) is a measure of the likelihood that two randomly 
 $$
 \text{IoC} = \frac{\sum_{i=0}^{25} f_i \cdot (f_i - 1)}{N \cdot (N - 1)}
 
+For this purpose, we have created a custom implementation of the IoCFitness class used by mikepound in his Enigma machine implementation. Because in our cipher text we have spaces, we have to filter them out before calculating the IoC. The implementation can be found in the `IoCFitness.java` file. 
+
+Now let's focus on modifying the `EnigmaAnalysis.java` file to find the best rotor configurations for the given cipher text. We will first create a method named 'getRotorConfigurations' which returns a list of all the 60 possible rotor combinations (5 * 4 * 3 = 60). Once we have the rotor configurations, we will iterate over each one and use the 17.576 of possible initial rotor positions (26 letters in the English alphabet -> 26 * 26 * 26 = 17.576) to calculate the IoC for each rotor configuration. We will then sort the rotor configurations by the IoC in descending order and print the top 10 rotor configurations. For this purpose we have implemented the 'findRotorConfiguration' method which needs the ciphertext, the number of top rotor configurations to return and the plugboard configuration (none for now). This is the current state of our EnigmaCrackerApplication.java file:
+
+```java
+@SpringBootApplication
+public class EnigmaCrackerApplication {
+    public static void main(String[] args) {
+        try {
+            // Load the file as a resource
+            InputStream inputStream = EnigmaCrackerApplication.class
+                    .getResourceAsStream("/es/usj/crypto/cipher.txt");
+
+            if (inputStream == null) {
+                throw new IOException("File not found in resources: /es/usj/crypto/cipher.txt");
+            }
+
+            String ciphertextContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            System.out.println("Trying to crack the following ciphertext:\n");
+            System.out.println(ciphertextContent + "\n");
+
+            // Get 10 best rotor configurations
+            IoCFitness fitness = new IoCFitness();
+            ScoredEnigmaKey[] bestRotorConfigurations = EnigmaAnalysis.findRotorConfiguration(ciphertextContent, 10, fitness);
+
+            // Print the best rotor configurations
+            System.out.println("Best rotor configurations:");
+            for (ScoredEnigmaKey key : bestRotorConfigurations) {
+                System.out.println("Rotor Configurations: " + Arrays.toString(key.rotorConfigurations)
+                 + " Initial positions: " + Arrays.toString(key.rotorPositions) + " Score: " + key.getScore());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+Running the program, we find the following 10 best rotor confgiurations:
+
+```
+Best rotor configurations:
+Rotor Configurations: [ROTOR_I, ROTOR_IV, ROTOR_V] Initial positions: [18, 22, 21] Score: 0.043464713
+Rotor Configurations: [ROTOR_V, ROTOR_IV, ROTOR_III] Initial positions: [12, 23, 14] Score: 0.043412786
+Rotor Configurations: [ROTOR_IV, ROTOR_I, ROTOR_V] Initial positions: [3, 20, 2] Score: 0.043140158
+Rotor Configurations: [ROTOR_II, ROTOR_I, ROTOR_V] Initial positions: [24, 17, 10] Score: 0.042854548
+Rotor Configurations: [ROTOR_IV, ROTOR_V, ROTOR_II] Initial positions: [11, 23, 11] Score: 0.042841565
+Rotor Configurations: [ROTOR_IV, ROTOR_III, ROTOR_II] Initial positions: [11, 23, 0] Score: 0.042802617
+Rotor Configurations: [ROTOR_III, ROTOR_V, ROTOR_IV] Initial positions: [15, 20, 22] Score: 0.042750686
+Rotor Configurations: [ROTOR_I, ROTOR_V, ROTOR_II] Initial positions: [25, 9, 19] Score: 0.042737707
+Rotor Configurations: [ROTOR_II, ROTOR_III, ROTOR_V] Initial positions: [5, 12, 9] Score: 0.042711742
+Rotor Configurations: [ROTOR_V, ROTOR_III, ROTOR_IV] Initial positions: [6, 7, 22] Score: 0.042711742
+```
+
 ## License 🪪
 
 Copyright 2024 Daniel Buxton Sierras
