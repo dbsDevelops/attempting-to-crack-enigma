@@ -224,7 +224,7 @@ YX ATHTDDXE VBKKAN HIX UE MYFLKJ ILF QEXSZ R WQLG ZCDTPZ DUTHM FOQ AKBRWUF ...
 ...
 
 Observations:
-	•	The decrypted texts show varying levels of plausibility, with some containing recognizable patterns like “TO”, “AND”, or partial words. However, none are entirely coherent, suggesting the need for further refinement.
+	•	The decrypted texts show varying levels of plausibility, with some containing recognizable patterns like “I”, "TO", “SPY”, "MAD", or partial words. However, none are entirely coherent, suggesting the need for further refinement.
 
 ## Simulated Annealing for Improved Results
 
@@ -234,25 +234,32 @@ To overcome the limitations of hill-climbing and address the issue of local opti
 
 Using simulated annealing, we achieved higher fitness scores and more plausible decrypted texts. The following is the final configuration with the best result:
 
+```
 Rotor Configuration: [ROTOR_IV, ROTOR_V, ROTOR_II] Initial positions: [11, 23, 11]
-Plugboard Configuration: CV:AD:MZ:OW:IN:SY:GB:EJ:QT:KU
+Plugboard Configuration: MU:KJ:AT:EZ:ID:GB:OY:QL:CX:SW
 Decrypted Text:
-THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG ...
+UW MGXDPRVX GZCQAL BHX MD YUMHBZ MNC NRTQL T TNXZ XKAOGC HRSWS NXT VHTZKKH
+KIH WCMAV FEV EHXLS SNKM BA TJD FXRN YES VGEXRXHR OAF SOAERRHPLILJ LFZ
+ZEQIX OV LTE MGE WM MNR JMT LTZC ZN ZEXH MAD MTJZALL MLRX PF BCXB EXB
+```
 
 ## Conclusions and Final Remarks
 
 Through this project, we successfully explored the cryptanalysis of a modified Enigma M3 machine. The combination of hill-climbing and simulated annealing allowed us to efficiently navigate the vast solution space and identify rotor and plugboard configurations that produce meaningful decryptions.
 
 ### Lessons Learned:
+Here are some concepts I have learned through this project:
 	-	Fitness Functions: Incorporating unigram, bigram, and trigram scoring was crucial for evaluating the quality of decrypted texts.
 	-	Parallelism: Leveraging parallel processing significantly reduced computation time for each iteration.
 	-	Dynamic Adjustments: Refining the neighborhood exploration strategy improved the efficiency of the search process.
 
 ### Limitations:
+The limitation found in the project where the following:
 	-	The final result depends heavily on the quality of fitness functions and the chosen parameters for optimization algorithms.
 	-	The modified Enigma’s custom rotors and reflectors make it challenging to apply standard cryptanalytic techniques.
 
-Future Work
+### Future Work
+With more time and resources, I would try the following options:
 	-	Explore more advanced techniques, such as genetic algorithms, for plugboard optimization.
 	-	Incorporate machine learning models to dynamically learn patterns in ciphertexts for improved scoring.
 	-	Extend the analysis to include additional Enigma variants or other historical cipher machines.
