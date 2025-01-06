@@ -17,7 +17,7 @@ public class BigramFitness extends FitnessFunction {
         // Bigrams
         this.bigrams = new float[826];
         Arrays.fill(this.bigrams, (float)Math.log10(epsilon));
-        try (final InputStream is = BigramFitness.class.getResourceAsStream("/data/bigrams");
+        try (final InputStream is = BigramFitness.class.getResourceAsStream("/es/usj/crypto/data/text/bigrams");
              final Reader r = new InputStreamReader(is, StandardCharsets.UTF_8);
              final BufferedReader br = new BufferedReader(r);
              final Stream<String> lines = br.lines()) {
@@ -35,13 +35,22 @@ public class BigramFitness extends FitnessFunction {
     @Override
     public float score(char[] text) {
         float fitness = 0;
-        int current = 0;
-        int next = text[0] - 65;
-        for (int i = 1; i < text.length; i++) {
-            current = next;
-            next = text[i] - 65;
-            fitness += this.bigrams[biIndex(current, next)];
+        int current = -1; // Initialize with an invalid index
+
+        for (char c : text) {
+            if (Character.isAlphabetic(c)) {
+                int next = Character.toUpperCase(c) - 'A';
+
+                // If we already have a valid previous character, calculate the bigram fitness
+                if (current != -1) {
+                    fitness += this.bigrams[biIndex(current, next)];
+                }
+
+                // Update the current character
+                current = next;
+            }
         }
+
         return fitness;
     }
 }

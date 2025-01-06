@@ -10,7 +10,7 @@ public class SingleCharacterFitness extends FitnessFunction {
     public SingleCharacterFitness() {
         // Single characters
         this.singles = new float[26];
-        try (final InputStream is = SingleCharacterFitness.class.getResourceAsStream("/data/single");
+        try (final InputStream is = SingleCharacterFitness.class.getResourceAsStream("/es/usj/crypto/data/text/single");
              final Reader r = new InputStreamReader(is, StandardCharsets.UTF_8);
              final BufferedReader br = new BufferedReader(r);
              final Stream<String> lines = br.lines()) {
@@ -28,7 +28,9 @@ public class SingleCharacterFitness extends FitnessFunction {
     public float score(char[] text) {
         float fitness = 0;
         for (char c: text) {
-            fitness += this.singles[c - 65];
+            if (c >= 'A' && c <= 'Z') { // Only process valid uppercase alphabetic characters
+                fitness += this.singles[c - 'A'];
+            }
         }
         return fitness;
     }

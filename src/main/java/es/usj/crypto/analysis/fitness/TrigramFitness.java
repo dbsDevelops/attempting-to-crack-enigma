@@ -16,7 +16,7 @@ public class TrigramFitness extends FitnessFunction {
         // Trigrams
         this.trigrams = new float[26426];
         Arrays.fill(this.trigrams, (float)Math.log10(epsilon));
-        try (final InputStream is = TrigramFitness.class.getResourceAsStream("/data/trigrams");
+        try (final InputStream is = TrigramFitness.class.getResourceAsStream("/es/usj/crypto/data/text/trigrams");
              final Reader r = new InputStreamReader(is, StandardCharsets.UTF_8);
              final BufferedReader br = new BufferedReader(r);
              final Stream<String> lines = br.lines()) {
@@ -34,15 +34,24 @@ public class TrigramFitness extends FitnessFunction {
     @Override
     public float score(char[] text) {
         float fitness = 0;
-        int current = 0;
-        int next1 = text[0] - 65;
-        int next2 = text[1] - 65;
-        for (int i = 2; i < text.length; i++) {
-            current = next1;
-            next1 = next2;
-            next2 = text[i] - 65;
-            fitness += this.trigrams[triIndex(current, next1, next2)];
+        int current = -1, next1 = -1, next2 = -1; // Initialize with invalid indices
+
+        for (char c : text) {
+            if (Character.isAlphabetic(c)) {
+                int index = Character.toUpperCase(c) - 'A'; // Convert to uppercase and get index
+
+                // Shift the indices for trigram calculation
+                current = next1;
+                next1 = next2;
+                next2 = index;
+
+                // If we have enough valid characters, compute the trigram fitness
+                if (current != -1 && next1 != -1 && next2 != -1) {
+                    fitness += this.trigrams[triIndex(current, next1, next2)];
+                }
+            }
         }
+
         return fitness;
     }
 }

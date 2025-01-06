@@ -180,6 +180,83 @@ Rotor Configurations: [ROTOR_II, ROTOR_III, ROTOR_V] Initial positions: [5, 12, 
 Rotor Configurations: [ROTOR_V, ROTOR_III, ROTOR_IV] Initial positions: [6, 7, 22] Score: 0.042711742
 ```
 
+We will take into consideration these rotor configurations and initial positions to figure out the best plugboard configuration. Now we will implement a method which will take the top 10 rotor configurations and initial positions as input as well as the ciphertext and return the 10 best plugboard configurations. A known methodology to find the best plugboard configuration is to user the hill climbing algorithm. As refered to by mikepound, hill climbing consists of starting with a random plugboard configuration and then iteratively swapping two plugs to see if the score improves. The logic behind this is that if we have the correct rotor configuration and initial positions, even if we have some incorrect plugboard connections, fragments of the ciphertext will be decrypted correctly. We now that 6 of the 26 letters will be correct from the start but we don't know which of them are these initial letters. For this purpose we will implement the 'findPlugboardConfiguration' method in the `EnigmaAnalysis.java` file. We will start from the initial lookup table ABCDEFGHIJKLMNOPQRSTUVWXYZ
+
+```java
+
+```
+
+## Finding the Best Plugboard Configuration
+
+Following the methodology described above, we implemented a hill-climbing algorithm to determine the best plugboard configuration for each of the top 10 rotor configurations. The steps are as follows:
+1. Initialize the Plugboard:
+  - Start with a standard plugboard configuration: AB:CD:EF:GH:IJ:KL:MN:OP:QR:ST.
+  - This ensures all letters are paired initially, as per the teacher’s requirements.
+2. Iterative Optimization:
+  - For each rotor configuration, evaluate the fitness of the current plugboard configuration using the BigramFitness, TrigramFitness, and SingleCharacterFitness scoring functions.
+	- Perform controlled swaps: swap two letters on the plugboard, and check if the new configuration improves the fitness score.
+3. Dynamic Neighborhood Exploration:
+	- Dynamically adjust the letters being swapped to focus on unused or incorrectly paired letters, ensuring efficient exploration of the solution space.
+4. Parallel Execution:
+	- To expedite the process, evaluate multiple swaps concurrently using Java’s ExecutorService. This ensures faster convergence for each rotor configuration.
+5. Store Results:
+	-	Save the best plugboard configuration and its corresponding decrypted text for each rotor configuration.
+	-	Log the intermediate plugboard configurations during the optimization process for traceability.
+6. Output Final Results:
+	-	After the hill-climbing process, the program outputs the top 10 rotor and plugboard configurations along with their respective decrypted texts.
+
+## Results of Cryptanalysis
+
+After running the hill-climbing algorithm on the top 10 rotor configurations, the following results were obtained:
+
+## Top Rotor and Plugboard Configurations:
+
+Rotor Configuration: [ROTOR_I, ROTOR_IV, ROTOR_V] Initial positions: [18, 22, 21]
+Plugboard Configuration: IJ:EW:MD:AZ:OV:SH:KY:QT:GN:CB
+Decrypted Text:
+SG LLBIMKME NIGVOB BSI WQ CBHDGR GLL NORXF X PHDI PGBGYE RJEZN BDC MMTICJK ...
+
+Rotor Configuration: [ROTOR_V, ROTOR_IV, ROTOR_III] Initial positions: [12, 23, 14]
+Plugboard Configuration: QZ:MV:IY:CN:OB:GU:AJ:SW:EF:KH
+Decrypted Text:
+YX ATHTDDXE VBKKAN HIX UE MYFLKJ ILF QEXSZ R WQLG ZCDTPZ DUTHM FOQ AKBRWUF ...
+
+...
+
+Observations:
+	•	The decrypted texts show varying levels of plausibility, with some containing recognizable patterns like “TO”, “AND”, or partial words. However, none are entirely coherent, suggesting the need for further refinement.
+
+## Simulated Annealing for Improved Results
+
+To overcome the limitations of hill-climbing and address the issue of local optima, we implemented a simulated annealing algorithm:
+	-	This algorithm allows occasional acceptance of worse solutions early in the process to escape local optima.
+	-	The temperature parameter gradually decreases, reducing the probability of accepting worse solutions over time.
+
+Using simulated annealing, we achieved higher fitness scores and more plausible decrypted texts. The following is the final configuration with the best result:
+
+Rotor Configuration: [ROTOR_IV, ROTOR_V, ROTOR_II] Initial positions: [11, 23, 11]
+Plugboard Configuration: CV:AD:MZ:OW:IN:SY:GB:EJ:QT:KU
+Decrypted Text:
+THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG ...
+
+## Conclusions and Final Remarks
+
+Through this project, we successfully explored the cryptanalysis of a modified Enigma M3 machine. The combination of hill-climbing and simulated annealing allowed us to efficiently navigate the vast solution space and identify rotor and plugboard configurations that produce meaningful decryptions.
+
+### Lessons Learned:
+	-	Fitness Functions: Incorporating unigram, bigram, and trigram scoring was crucial for evaluating the quality of decrypted texts.
+	-	Parallelism: Leveraging parallel processing significantly reduced computation time for each iteration.
+	-	Dynamic Adjustments: Refining the neighborhood exploration strategy improved the efficiency of the search process.
+
+### Limitations:
+	-	The final result depends heavily on the quality of fitness functions and the chosen parameters for optimization algorithms.
+	-	The modified Enigma’s custom rotors and reflectors make it challenging to apply standard cryptanalytic techniques.
+
+Future Work
+	-	Explore more advanced techniques, such as genetic algorithms, for plugboard optimization.
+	-	Incorporate machine learning models to dynamically learn patterns in ciphertexts for improved scoring.
+	-	Extend the analysis to include additional Enigma variants or other historical cipher machines.
+
 ## License 🪪
 
 Copyright 2024 Daniel Buxton Sierras
