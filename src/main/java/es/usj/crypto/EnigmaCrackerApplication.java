@@ -56,7 +56,7 @@ public class EnigmaCrackerApplication {
             
             // Optimise the plugboards for each rotor configuration
             Map<ScoredEnigmaKey, String> optimisedPlugboardConfigurations = PlugboardHillClimber.optimisePlugboard(
-                ciphertextContent, optimisedRotorConfigurations, singleCharacterFitness, bigramFitness, trigramFitness, 10000, 
+                ciphertextContent, optimisedRotorConfigurations, singleCharacterFitness, bigramFitness, trigramFitness, 100000, 
                 "plugboard_hill_climber.log", "plugboards.txt", "plugboards.txt");
 
             // Prepare file for results
