@@ -180,13 +180,9 @@ Rotor Configurations: [ROTOR_II, ROTOR_III, ROTOR_V] Initial positions: [5, 12, 
 Rotor Configurations: [ROTOR_V, ROTOR_III, ROTOR_IV] Initial positions: [6, 7, 22] Score: 0.042711742
 ```
 
-We will take into consideration these rotor configurations and initial positions to figure out the best plugboard configuration. Now we will implement a method which will take the top 10 rotor configurations and initial positions as input as well as the ciphertext and return the 10 best plugboard configurations. A known methodology to find the best plugboard configuration is to user the hill climbing algorithm. As refered to by mikepound, hill climbing consists of starting with a random plugboard configuration and then iteratively swapping two plugs to see if the score improves. The logic behind this is that if we have the correct rotor configuration and initial positions, even if we have some incorrect plugboard connections, fragments of the ciphertext will be decrypted correctly. We now that 6 of the 26 letters will be correct from the start but we don't know which of them are these initial letters. For this purpose we will implement the 'findPlugboardConfiguration' method in the `EnigmaAnalysis.java` file. We will start from the initial lookup table ABCDEFGHIJKLMNOPQRSTUVWXYZ
+We will take into consideration these rotor configurations and initial positions to figure out the best plugboard configuration. Now we will implement a method which will take the top 10 rotor configurations and initial positions as input as well as the ciphertext and return the 10 best plugboard configurations. A known methodology to find the best plugboard configuration is to user the hill climbing algorithm. As refered to by mikepound, hill climbing consists of starting with a random plugboard configuration and then iteratively swapping two plugs to see if the score improves. The logic behind this is that if we have the correct rotor configuration and initial positions, even if we have some incorrect plugboard connections, fragments of the ciphertext will be decrypted correctly. We now that 6 of the 26 letters will be correct from the start but we don't know which of them are these initial letters. For this purpose we will implement the 'optimisePlugboard' method in the `PlugboardHillClimber.java` file. 
 
-```java
-
-```
-
-## Finding the Best Plugboard Configuration
+### Finding the Best Plugboard Configuration
 
 Following the methodology described above, we implemented a hill-climbing algorithm to determine the best plugboard configuration for each of the top 10 rotor configurations. The steps are as follows:
 1. Initialize the Plugboard:
@@ -205,12 +201,13 @@ Following the methodology described above, we implemented a hill-climbing algori
 6. Output Final Results:
 	-	After the hill-climbing process, the program outputs the top 10 rotor and plugboard configurations along with their respective decrypted texts.
 
-## Results of Cryptanalysis
+### Results of Cryptanalysis
 
 After running the hill-climbing algorithm on the top 10 rotor configurations, the following results were obtained:
 
-## Top Rotor and Plugboard Configurations:
+## Top Rotor and Plugboard Configurations ⛭
 
+```
 Rotor Configuration: [ROTOR_I, ROTOR_IV, ROTOR_V] Initial positions: [18, 22, 21]
 Plugboard Configuration: IJ:EW:MD:AZ:OV:SH:KY:QT:GN:CB
 Decrypted Text:
@@ -220,13 +217,12 @@ Rotor Configuration: [ROTOR_V, ROTOR_IV, ROTOR_III] Initial positions: [12, 23, 
 Plugboard Configuration: QZ:MV:IY:CN:OB:GU:AJ:SW:EF:KH
 Decrypted Text:
 YX ATHTDDXE VBKKAN HIX UE MYFLKJ ILF QEXSZ R WQLG ZCDTPZ DUTHM FOQ AKBRWUF ...
+```
 
-...
+### Observations:
+	-	The decrypted texts show varying levels of plausibility, with some containing recognizable patterns like “I”, "TO", “SPY”, "MAD", or partial words. However, none are entirely coherent, suggesting the need for further refinement.
 
-Observations:
-	•	The decrypted texts show varying levels of plausibility, with some containing recognizable patterns like “I”, "TO", “SPY”, "MAD", or partial words. However, none are entirely coherent, suggesting the need for further refinement.
-
-## Simulated Annealing for Improved Results
+### Simulated Annealing for Improved Results
 
 To overcome the limitations of hill-climbing and address the issue of local optima, we implemented a simulated annealing algorithm:
 	-	This algorithm allows occasional acceptance of worse solutions early in the process to escape local optima.
@@ -243,7 +239,7 @@ KIH WCMAV FEV EHXLS SNKM BA TJD FXRN YES VGEXRXHR OAF SOAERRHPLILJ LFZ
 ZEQIX OV LTE MGE WM MNR JMT LTZC ZN ZEXH MAD MTJZALL MLRX PF BCXB EXB
 ```
 
-## Conclusions and Final Remarks
+## Conclusions and Final Remarks 📊
 
 Through this project, we successfully explored the cryptanalysis of a modified Enigma M3 machine. The combination of hill-climbing and simulated annealing allowed us to efficiently navigate the vast solution space and identify rotor and plugboard configurations that produce meaningful decryptions.
 
